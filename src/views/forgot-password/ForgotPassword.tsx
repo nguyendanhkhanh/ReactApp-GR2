@@ -12,6 +12,7 @@ import { ILoginData } from '../../types/auth.interface';
 import getInstanceFirebase from './../../firebase/firebase';
 import FieldTextInput from '../../components/common/TextInput';
 import * as Yup from 'yup';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -95,6 +96,11 @@ export default function ForgotPassword(props: any) {
 								<Button type='submit' fullWidth variant='contained' color='primary' className={classes.submit}>
 									Send
 								</Button>
+								<Grid container>
+									<Grid item xs>
+										<Link to='/login'>Back to Login Screen</Link>
+									</Grid>
+								</Grid>
 							</Form>
 						)}
 					</Formik>
