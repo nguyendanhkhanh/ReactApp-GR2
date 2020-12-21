@@ -71,7 +71,8 @@ export default function Login(props: any) {
 			}
 			CreateNotification('success')(`Hello ${result.user?.email}`);
 		} catch (error) {
-			console.log(error);
+			if (error.code == 'auth/user-not-found') return CreateNotification('error')(`Wrong username or password`);
+			CreateNotification('error')(error.message);
 		}
 	};
 	return (
@@ -98,7 +99,6 @@ export default function Login(props: any) {
 									label='Email Address'
 									name='email'
 									autoComplete='email'
-									autoFocus
 									component={FieldTextInput}
 								/>
 								{errors.email && touched.email ? <div className='text-danger'>{errors.email}</div> : null}

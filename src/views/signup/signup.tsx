@@ -73,9 +73,8 @@ export default function Signup(props: any) {
 			setItem(SessionStorageKey.MqttCode, values.mqttCode);
 			dispatch(SessionStorageChange());
 			CreateNotification('success')(`Register success, Hello ${result.user?.email}`);
-			props.history.replace('/');
 		} catch (error) {
-			console.log(error);
+			CreateNotification('error')(error.message);
 		}
 	};
 	return (
@@ -106,7 +105,6 @@ export default function Signup(props: any) {
 									label='Email Address'
 									name='email'
 									autoComplete='email'
-									autoFocus
 									component={FieldTextInput}
 								/>
 								{errors.email && touched.email ? <div className='text-danger'>{errors.email}</div> : null}

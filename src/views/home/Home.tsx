@@ -47,7 +47,6 @@ function Home(props: any) {
 	const [switchRL3, setswitchRL3] = useState<boolean>(false);
 	const [switchRL4, setswitchRL4] = useState<boolean>(false);
 	const [timer, setTimer] = useState<number>(0);
-
 	const handleChange = useCallback(
 		(data, key) => {
 			switch (key) {

@@ -66,7 +66,7 @@ function Admin(props: any) {
 									<Route
 										exact
 										path={prop.layout || '' + prop.path}
-										render={props => <prop.component {...props} />}
+										render={props => <prop.component {...props} mqttClient={mqttClient} />}
 										key={key}
 									/>
 								);

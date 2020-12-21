@@ -51,7 +51,6 @@ function ChangePassword() {
 										label='Password'
 										name='password'
 										type='password'
-										autoFocus
 										component={FieldTextInput}
 									/>
 									{errors.password && touched.password ? <div className='text-danger'>{errors.password}</div> : null}

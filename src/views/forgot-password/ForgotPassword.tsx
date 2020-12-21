@@ -89,7 +89,6 @@ export default function ForgotPassword(props: any) {
 									label='Email Address'
 									name='email'
 									autoComplete='email'
-									autoFocus
 									component={FieldTextInput}
 								/>
 								{errors.email && touched.email ? <div className='text-danger'>{errors.email}</div> : null}
