@@ -74,7 +74,7 @@ function Admin(props: any) {
 							return <Route path={prop.layout || '' + prop.path} component={prop.component} key={key} />;
 						})}
 					</Switch>
-					<Redirect from='/' to='/home'></Redirect>
+					<Redirect from='*' to='/home'></Redirect>
 				</div>
 			</div>
 		</div>
