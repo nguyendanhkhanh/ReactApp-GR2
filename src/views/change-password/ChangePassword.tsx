@@ -17,21 +17,19 @@ const ChangePasswordValidateSchema = Yup.object().shape({
 const firebase = getInstanceFirebase();
 
 function ChangePassword() {
-	const submit = React.useCallback(
-		async ({ password, confirmPassword }: { password: string; confirmPassword: string }) => {
-			try {
-				const user = firebase.getCurrentUser();
-				if (user) {
-					await user.updatePassword(password);
-					CreateNotification('success')('Change password successfully!');
-				}
-			} catch (error) {
-				console.log(error);
-				CreateNotification('error')(error.message);
+	const submit = React.useCallback(async (value: { password: string; confirmPassword: string }, { resetForm }) => {
+		try {
+			const user = firebase.getCurrentUser();
+			if (user) {
+				await user.updatePassword(value.password);
+				CreateNotification('success')('Change password successfully!');
+				resetForm();
 			}
-		},
-		[],
-	);
+		} catch (error) {
+			console.log(error);
+			CreateNotification('error')(error.message);
+		}
+	}, []);
 	return (
 		<Card className='card-stats'>
 			<CardBody>
