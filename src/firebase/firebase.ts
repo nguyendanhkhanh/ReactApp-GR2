@@ -75,16 +75,17 @@ class Firebase {
 		return result;
 	}
 
-	sendSignInLinkToEmail(email: string) {
-		return this.auth.sendSignInLinkToEmail(email, {
-			url: `http://localhost:3000/sign-up`,
-			handleCodeInApp: true,
-		});
+	sendPasswordResetEmail(email: string) {
+		return this.auth.sendPasswordResetEmail(email);
 	}
 
 	verifyEmail() {
 		const user = this.getCurrentUser() as app.User;
 		return user.sendEmailVerification();
+	}
+
+	isEmailVerified() {
+		return this.auth.currentUser && this.auth.currentUser.emailVerified;
 	}
 
 	getUserSessionStorage() {
@@ -94,6 +95,17 @@ class Firebase {
 
 	removeUserSessionStorage() {
 		sessionStorage.removeItem(`firebase:authUser:${FirebaseConfig.apiKey}:[DEFAULT]`);
+	}
+
+	verifyPasswordResetCode(code: string) {
+		return this.auth.verifyPasswordResetCode(code);
+	}
+	confirmPasswordReset(actionCode: string, newPassword: string) {
+		return this.auth.confirmPasswordReset(actionCode, newPassword);
+	}
+
+	applyAction(code: string) {
+		return this.auth.applyActionCode(code);
 	}
 }
 export default function getInstanceFirebase() {

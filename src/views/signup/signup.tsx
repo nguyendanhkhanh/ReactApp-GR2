@@ -8,13 +8,13 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Field, Formik, Form } from 'formik';
-import { ILoginData, ISignupData } from '../../types/auth.interface';
+import { ISignupData } from '../../types/auth.interface';
 import getInstanceFirebase from './../../firebase/firebase';
 import FieldTextInput from '../../components/common/TextInput';
 import { Link } from 'react-router-dom';
 import CreateNotification from '../../service/Notifications.service';
 import { SessionStorageKey } from '../../constants/SessionStorageConstants';
-import { setItem } from '../../service/SessionStorage.service';
+import { clear, setItem } from '../../service/SessionStorage.service';
 import { useDispatch } from 'react-redux';
 import { SessionStorageChange } from '../../redux/actions/CommonAction';
 import * as Yup from 'yup';
@@ -56,7 +56,7 @@ const SignupValidateSchema = Yup.object().shape({
 });
 export default function Signup(props: any) {
 	const classes = useStyles();
-	const dispatch = useDispatch();
+	// const dispatch = useDispatch();
 	const signup = async (values: ISignupData) => {
 		try {
 			const mqttData = await firebase.getMqttByCode(values.mqttCode);
@@ -70,9 +70,18 @@ export default function Signup(props: any) {
 					uid: result.user.uid,
 					mqttCode: values.mqttCode,
 				}));
-			setItem(SessionStorageKey.MqttCode, values.mqttCode);
-			dispatch(SessionStorageChange());
-			CreateNotification('success')(`Register success, Hello ${result.user?.email}`);
+			if (result.user) {
+				if (!result.user.emailVerified) {
+					CreateNotification('success')(`Register success, you must verify email for login!`);
+					props['history'].replace('/verify-email');
+					// firebase.logout();
+					clear();
+					return;
+				}
+			}
+			// setItem(SessionStorageKey.MqttCode, values.mqttCode);
+			// dispatch(SessionStorageChange());
+			// CreateNotification('success')(`Register success, Hello ${result.user?.email}`);
 		} catch (error) {
 			CreateNotification('error')(error.message);
 		}

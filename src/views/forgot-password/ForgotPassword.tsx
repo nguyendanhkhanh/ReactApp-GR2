@@ -13,6 +13,7 @@ import getInstanceFirebase from './../../firebase/firebase';
 import FieldTextInput from '../../components/common/TextInput';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
+import CreateNotification from '../../service/Notifications.service';
 
 const useStyles = makeStyles(theme => ({
 	root: {
@@ -50,15 +51,16 @@ const SignupValidateSchema = Yup.object().shape({
 });
 export default function ForgotPassword(props: any) {
 	const classes = useStyles();
+	React.useEffect(() => {
+		if (firebase.isAuthorization()) firebase.logout();
+	}, []);
 	const forgotPassword = async (values: ILoginData) => {
 		try {
-			// const result = await firebase.login(values.email, values.password);
-			// const doc = await firebase.checkVerifyAccount((result.user as any).uid);
-			// console.log(doc);
-			// console.log(result);
-			// await firebase.verifyEmail();
+			firebase.sendPasswordResetEmail(values.email);
+			CreateNotification('success')(`A letter requesting to change your password has been sent to ${values.email}`);
+			props['history'].replace('/');
 		} catch (error) {
-			console.log(error);
+			CreateNotification('error')(error.message);
 		}
 	};
 	return (

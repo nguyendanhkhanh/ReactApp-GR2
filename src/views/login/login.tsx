@@ -13,7 +13,7 @@ import { ILoginData } from '../../types/auth.interface';
 import getInstanceFirebase from './../../firebase/firebase';
 import FieldTextInput from '../../components/common/TextInput';
 import CreateNotification from '../../service/Notifications.service';
-import { setItem } from '../../service/SessionStorage.service';
+import { clear, setItem } from '../../service/SessionStorage.service';
 import { SessionStorageKey } from '../../constants/SessionStorageConstants';
 import { useDispatch } from 'react-redux';
 import { SessionStorageChange } from '../../redux/actions/CommonAction';
@@ -58,6 +58,9 @@ const LoginValidateSchema = Yup.object().shape({
 export default function Login(props: any) {
 	const classes = useStyles();
 	const dispatch = useDispatch();
+	React.useEffect(() => {
+		if (firebase.isAuthorization()) firebase.logout();
+	}, []);
 	const login = async (values: ILoginData) => {
 		try {
 			const result = await firebase.login(values.email, values.password);
@@ -66,6 +69,12 @@ export default function Login(props: any) {
 				const user = await firebase.getUserDataByUid(result.user.uid);
 				const mqttCode = user.docs.pop()?.get('mqttCode');
 				if (!mqttCode) throw new Error('Mqtt Code not found!');
+				if (!result.user.emailVerified) {
+					props['history'].replace('/verify-email');
+					// firebase.logout();
+					clear();
+					return;
+				}
 				setItem(SessionStorageKey.MqttCode, mqttCode);
 				dispatch(SessionStorageChange());
 			}

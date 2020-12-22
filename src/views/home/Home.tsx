@@ -92,6 +92,7 @@ function Home(props: any) {
 	}, [timer]);
 
 	React.useEffect(() => {
+		console.log(mqttData);
 		if (isNaN(mqttData[FBTopicSub.HourUpHRl1]) || isNaN(mqttData[FBTopicSub.MinuteUpHRl1])) return;
 		if (isNaN(mqttData[FBTopicSub.HourDownHRl1]) || isNaN(mqttData[FBTopicSub.MinuteDownHRl1])) return;
 		const time =
