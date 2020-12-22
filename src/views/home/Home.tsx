@@ -92,14 +92,20 @@ function Home(props: any) {
 	}, [timer]);
 
 	React.useEffect(() => {
-		console.log(mqttData);
 		if (isNaN(mqttData[FBTopicSub.HourUpHRl1]) || isNaN(mqttData[FBTopicSub.MinuteUpHRl1])) return;
 		if (isNaN(mqttData[FBTopicSub.HourDownHRl1]) || isNaN(mqttData[FBTopicSub.MinuteDownHRl1])) return;
-		const time =
-			+mqttData[FBTopicSub.HourDownHRl1] * 60 * 60 +
-			+mqttData[FBTopicSub.MinuteDownHRl1] * 60 -
-			(+mqttData[FBTopicSub.HourUpHRl1] * 60 * 60 + +mqttData[FBTopicSub.MinuteUpHRl1] * 60);
-		setTimer(time > 0 ? time : 0);
+		const secondStartTime = +mqttData[FBTopicSub.HourUpHRl1] * 60 * 60 + +mqttData[FBTopicSub.MinuteUpHRl1] * 60;
+		const secondEndTime = +mqttData[FBTopicSub.HourDownHRl1] * 60 * 60 + +mqttData[FBTopicSub.MinuteDownHRl1] * 60;
+		let time = secondEndTime - secondStartTime;
+		const secondNow = new Date().getHours() * 60 * 60 - new Date().getMinutes() * 60;
+		let timeout: NodeJS.Timeout;
+		if (secondNow <= secondStartTime) {
+			timeout = setTimeout(() => setTimer(time > 0 ? time : 0), (secondStartTime - secondNow) * 1000);
+		} else if (secondNow > secondStartTime && secondNow < secondEndTime) {
+			setTimer(secondEndTime - secondNow);
+		} else {
+		}
+		return () => timeout && clearTimeout(timeout);
 	}, [
 		mqttData[FBTopicSub.HourUpHRl1],
 		mqttData[FBTopicSub.MinuteUpHRl1],

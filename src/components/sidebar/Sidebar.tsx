@@ -20,9 +20,9 @@ function Sidebar({
 	return (
 		<div className='sidebar' data-color={bgColor} data-active-color={activeColor}>
 			<div className='logo text-center'>
-				<a href='/home' className='simple-text logo-normal'>
+				<NavLink to='/home' className='simple-text logo-normal'>
 					GR2
-				</a>
+				</NavLink>
 			</div>
 			<div className='sidebar-wrapper'>
 				<Nav>
