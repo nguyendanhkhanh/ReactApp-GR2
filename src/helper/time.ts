@@ -1,5 +1,4 @@
 export function ConvertSecondToTime(second: number) {
-	console.log(second);
 	const hour = Math.floor(second / (60 * 60));
 	const minute = Math.floor((second - hour * 60 * 60) / 60);
 	const secondRemaining = Math.floor(second - hour * 60 * 60 - minute * 60);

@@ -85,7 +85,9 @@ class Firebase {
 	}
 
 	isEmailVerified() {
-		return this.auth.currentUser && this.auth.currentUser.emailVerified;
+		const sessionData = this.getUserSessionStorage();
+		if (!sessionData) return;
+		return sessionData['emailVerified'];
 	}
 
 	getUserSessionStorage() {

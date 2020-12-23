@@ -24,5 +24,5 @@ export enum FBTopicPublish {
 	HourUp = 'APPgH1/RL1',
 	MinuteUp = 'APPgM1/RL1',
 	HourDown = 'APPgH2/RL1',
-	MinuteDown = 'APPgm2/RL1',
+	MinuteDown = 'APPgM2/RL1',
 }
