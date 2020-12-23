@@ -97,14 +97,16 @@ function Home(props: any) {
 		const secondStartTime = +mqttData[FBTopicSub.HourUpHRl1] * 60 * 60 + +mqttData[FBTopicSub.MinuteUpHRl1] * 60;
 		const secondEndTime = +mqttData[FBTopicSub.HourDownHRl1] * 60 * 60 + +mqttData[FBTopicSub.MinuteDownHRl1] * 60;
 		let time = secondEndTime - secondStartTime;
-		const secondNow = new Date().getHours() * 60 * 60 - new Date().getMinutes() * 60;
+		const secondNow = new Date().getHours() * 60 * 60 + new Date().getMinutes() * 60;
 		let timeout: NodeJS.Timeout;
 		if (secondNow <= secondStartTime) {
-			timeout = setTimeout(() => setTimer(time > 0 ? time : 0), (secondStartTime - secondNow) * 1000);
+			timeout = setTimeout(
+				() => setTimer(time > 0 ? time : 0),
+				(secondStartTime - secondNow - new Date().getSeconds()) * 1000,
+			);
 		} else if (secondNow > secondStartTime && secondNow < secondEndTime) {
 			setTimer(secondEndTime - secondNow);
-		} else {
-		}
+		} else setTimer(0);
 		return () => timeout && clearTimeout(timeout);
 	}, [
 		mqttData[FBTopicSub.HourUpHRl1],
@@ -122,6 +124,10 @@ function Home(props: any) {
 				return CreateNotification('error')('Error input');
 			if (+hashTimeStart[0] * 60 * 60 + +hashTimeStart[1] * 60 > +hashTimeEnd[0] * 60 * 60 + +hashTimeEnd[1] * 60) {
 				return CreateNotification('error')('Start time must be less end time');
+			}
+			const secondNow = new Date().getHours() * 60 * 60 + new Date().getMinutes() * 60;
+			if (+hashTimeEnd[0] * 60 * 60 + +hashTimeEnd[1] * 60 <= secondNow) {
+				return CreateNotification('error')('End time must be less now time');
 			}
 			mqttClient.publish(FBTopicPublish.HourUp, (+hashTimeStart[0]).toString());
 			mqttClient.publish(FBTopicPublish.MinuteUp, (+hashTimeStart[1]).toString());
